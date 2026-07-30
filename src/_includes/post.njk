@@ -1,0 +1,38 @@
+---
+layout: base.njk
+---
+
+<article class="post">
+  <div class="post-layout{% if outline %} has-outline{% endif %}">
+    <div class="post-main">
+      <header class="post-header">
+        <div class="sec__head">
+          <span class="sec__no">BLOG</span>
+          <span class="sec__name">Article</span>
+          <span class="sec__rule" aria-hidden="true"></span>
+        </div>
+        <h1 class="post-title">{{ title }}</h1>
+        <div class="post-meta">
+          <time datetime="{{ date | readableDate }}">{{ date | readableDate }}</time>
+          {% if tags %}
+            {% for tag in tags %}
+              {% if tag != 'posts' %}
+                <span class="tag">{{ tag }}</span>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </header>
+
+      <div class="post-content prose">
+        {{ content | safe }}
+      </div>
+    </div>
+
+    {% if outline %}
+    <aside class="post-sidebar">
+      {{ content | outline | safe }}
+    </aside>
+    {% endif %}
+  </div>
+</article>

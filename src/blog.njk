@@ -1,0 +1,83 @@
+---
+layout: base.njk
+title: 博客
+pagination:
+  data: collections.posts
+  size: 8
+  reverse: true
+  alias: pagedPosts
+permalink: /blog/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}index.html
+---
+
+<div class="page-content container">
+  <div class="sec__inner">
+    <div class="sec__head">
+      <span class="sec__no">LOG</span>
+      <span class="sec__name">Blog Archive</span>
+      <span class="sec__rule" aria-hidden="true"></span>
+    </div>
+
+    <h1 class="page-heading">博客文章 — <em>Field Notes</em></h1>
+
+    <!-- Tag filter chips -->
+    <nav class="tag-nav" aria-label="按标签筛选">
+      <a href="/blog/" class="tag-chip{% if not currentTag %} tag-chip--active{% endif %}">全部 <span class="tag-chip__count">{{ collections.posts | length }}</span></a>
+      {% for t in collections.tagList %}
+      <a href="/blog/tags/{{ t.name }}/" class="tag-chip">{{ t.name }} <span class="tag-chip__count">{{ t.count }}</span></a>
+      {% endfor %}
+    </nav>
+
+    {% if pagedPosts.length === 0 %}
+    <p class="prose" style="margin-top: 2rem;">暂无文章。</p>
+    {% else %}
+    <ul class="post-list">
+      {% for post in pagedPosts %}
+      <li>
+        <a href="{{ post.url }}" class="post-item">
+          <h2 class="post-item-title">{{ post.data.title }}</h2>
+          <p class="post-item-desc">{{ post.data.description }}</p>
+          <div class="post-item-meta">
+            <time>{{ post.data.date | shortDate }}</time>
+            {% for tag in post.data.tags %}
+              {% if tag != 'posts' %}
+                <span class="tag">{{ tag }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Pagination nav -->
+    {% if pagination.pages.length > 1 %}
+    <nav class="pagination" aria-label="分页导航">
+      <div class="pagination__inner">
+        {% if pagination.pageNumber > 0 %}
+        <a href="/blog/{% if pagination.pageNumber > 1 %}{{ pagination.pageNumber }}/{% endif %}" class="pagination__btn pagination__btn--prev">← 上一页</a>
+        {% else %}
+        <span class="pagination__btn pagination__btn--prev pagination__btn--disabled">← 上一页</span>
+        {% endif %}
+
+        <span class="pagination__info">
+          {% for page in pagination.pages %}
+            {% set pageNum = loop.index0 + 1 %}
+            {% if loop.index0 === pagination.pageNumber %}
+            <span class="pagination__num pagination__num--active">{{ pageNum }}</span>
+            {% else %}
+            <a href="/blog/{% if loop.index0 > 0 %}{{ pageNum }}/{% endif %}" class="pagination__num">{{ pageNum }}</a>
+            {% endif %}
+          {% endfor %}
+        </span>
+
+        {% if pagination.pageNumber < pagination.pages.length - 1 %}
+        <a href="/blog/{{ pagination.pageNumber + 2 }}/" class="pagination__btn pagination__btn--next">下一页 →</a>
+        {% else %}
+        <span class="pagination__btn pagination__btn--next pagination__btn--disabled">下一页 →</span>
+        {% endif %}
+      </div>
+    </nav>
+    {% endif %}
+    {% endif %}
+  </div>
+</div>

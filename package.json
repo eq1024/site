@@ -1,0 +1,28 @@
+{
+  "name": "personal-site",
+  "version": "1.0.0",
+  "description": "A minimal personal homepage and blog inspired by newspaper editorial design",
+  "scripts": {
+    "build:fonts": "node scripts/build-fonts.js",
+    "dev": "npm run build:fonts && npx @11ty/eleventy --serve --watch",
+    "build": "npm run clean && npm run build:fonts && npx @11ty/eleventy",
+    "clean": "rm -rf _site"
+  },
+  "keywords": [
+    "blog",
+    "eleventy",
+    "static-site",
+    "minimal"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "fontmin": "^1.1.1",
+    "wawoff2": "^2.0.1"
+  },
+  "dependencies": {
+    "markdown-it-anchor": "^9.2.1",
+    "prismjs": "^1.30.0"
+  }
+}

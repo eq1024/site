@@ -1,0 +1,61 @@
+---
+layout: base.njk
+pagination:
+  data: collections.tagList
+  size: 1
+  alias: tag
+permalink: /blog/tags/{{ tag.name }}/
+
+eleventyComputed:
+  title: "标签: {{ tag.name }}"
+---
+
+{% set currentSlug = tag.name %}
+{% set filtered = collections.posts | reverse | selectByTag(currentSlug) %}
+
+<div class="page-content container">
+  <div class="sec__inner">
+    <div class="sec__head">
+      <span class="sec__no">TAG</span>
+      <span class="sec__name">Tag Archive</span>
+      <span class="sec__rule" aria-hidden="true"></span>
+    </div>
+
+    <h1 class="page-heading">标签：<em>{{ tag.name }}</em> <span class="tag-count-badge">{{ filtered | length }} 篇</span></h1>
+
+    <!-- Tag filter chips -->
+    <nav class="tag-nav" aria-label="按标签筛选">
+      <a href="/blog/" class="tag-chip">全部 <span class="tag-chip__count">{{ collections.posts | length }}</span></a>
+      {% for t in collections.tagList %}
+      <a href="/blog/tags/{{ t.name }}/" class="tag-chip{% if t.name === tag.name %} tag-chip--active{% endif %}">{{ t.name }} <span class="tag-chip__count">{{ t.count }}</span></a>
+      {% endfor %}
+    </nav>
+
+    {% if filtered.length === 0 %}
+    <p class="prose" style="margin-top: 2rem;">暂无此标签的文章。</p>
+    {% else %}
+    <ul class="post-list">
+      {% for post in filtered %}
+      <li>
+        <a href="{{ post.url }}" class="post-item">
+          <h2 class="post-item-title">{{ post.data.title }}</h2>
+          <p class="post-item-desc">{{ post.data.description }}</p>
+          <div class="post-item-meta">
+            <time>{{ post.data.date | shortDate }}</time>
+            {% for pt in post.data.tags %}
+              {% if pt != 'posts' %}
+                <span class="tag">{{ pt }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <p style="margin-top: 2rem;">
+      <a href="/blog/" class="btn" style="font-size: 0.72rem;">← 返回博客</a>
+    </p>
+  </div>
+</div>

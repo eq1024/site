@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ description or site.description }}">
+  <meta property="og:title" content="{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}">
+  <meta property="og:description" content="{{ description or site.description }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b0d10">
+  <meta property="og:image" content="/og-image.png">
+  <title>{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}</title>
+
+  <link rel="preload" href="/fonts/Anton-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/OPPOSans-4.0-subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/MapleMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/prism-light.css" id="prism-light">
+  <link rel="stylesheet" href="/prism-dark.css" id="prism-dark">
+</head>
+
+<body>
+  <!-- Custom cursor layers (fine pointers only) -->
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor__reticle" aria-hidden="true"></div>
+
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="container">
+      <a href="/#top" class="nav__brand">
+        <span class="nav__brand-mark">E</span>
+        EQ1024
+        <span class="nav__brand-ver">V2.0 // FIELD MANUAL</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#profile"><i>01</i>Profile</a></li>
+        <li><a href="#service"><i>02</i>Record</a></li>
+        <li><a href="#systems"><i>03</i>Systems</a></li>
+        <li><a href="#inventory"><i>04</i>Inventory</a></li>
+        <li><a href="/blog/"><i>05</i>Blog</a></li>
+        <li><button class="nav__theme-btn" id="theme-toggle" type="button">Light</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__head reveal">
+        <span class="sec__no">END</span>
+        <span class="sec__name">Sign-Off</span>
+        <span class="sec__rule" aria-hidden="true"></span>
+      </div>
+
+      <p class="footer__motto reveal r1">写代码，做设计，偶尔写点东西。</p>
+
+      <nav class="footer__nav reveal r2" aria-label="站点导航">
+        <a href="/#top">Home</a>
+        <a href="/#profile">Profile</a>
+        <a href="/#systems">Projects</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about/">About</a>
+        <a href="https://github.com/eq1024" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="mailto:xhxjxk14@foxmail.com">Email</a>
+      </nav>
+
+      <div class="footer__tech reveal r3">
+        <span>Built with <a href="https://www.11ty.dev/" target="_blank" rel="noopener noreferrer">Eleventy</a></span>
+        <span>Hand-written CSS · No JS framework</span>
+        <span>Hosted on <a href="https://pages.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare Pages</a></span>
+        <span>Set in Anton · OPPO Sans · Maple Mono</span>
+      </div>
+
+      <div class="footer__signoff reveal r3">
+        <span>EQ1024 · FIELD MANUAL V2.0</span>
+        <span>Drawn by hand + Claude Code</span>
+        <span><a href="#top">↑ Back to Sheet 01</a></span>
+        <span>© 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="/prism.js"></script>
+  <script src="/prism-jsx.js"></script>
+  <script src="/prism-typescript.js"></script>
+  <script src="/prism-tsx.js"></script>
+  <script src="/prism-bash.js"></script>
+  <script src="/prism-json.js"></script>
+  <script src="/scripts/hero-wireframe.js"></script>
+  <script>
+    (function () {
+      var html = document.documentElement;
+      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ── THEME ─────────────────────────────────────
+      var toggle = document.getElementById('theme-toggle');
+      var saved = localStorage.getItem('theme');
+      // initial theme from html attribute (set server-side or by flash script)
+      // we read the current state, default to dark
+      if (saved === 'light') html.setAttribute('data-theme', 'light');
+      else if (!saved && window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
+
+      function setThemeLabel() {
+        if (!toggle) return;
+        toggle.textContent = html.getAttribute('data-theme') === 'light' ? 'Dark' : 'Light';
+      }
+      setThemeLabel();
+
+      function setPrism(theme) {
+        var light = document.getElementById('prism-light');
+        var dark = document.getElementById('prism-dark');
+        if (light) light.media = theme === 'dark' ? 'none' : 'all';
+        if (dark) dark.media = theme === 'dark' ? 'all' : 'none';
+      }
+
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+          html.setAttribute('data-theme', next);
+          localStorage.setItem('theme', next);
+          setThemeLabel();
+          setPrism(next);
+        });
+      }
+
+      // Apply initial Prism theme
+      setPrism(html.getAttribute('data-theme') || 'dark');
+
+      // ── LEDGER: duplicate track for seamless loop ──
+      var ledgerTrack = document.getElementById('ledger-track');
+      if (ledgerTrack) {
+        ledgerTrack.innerHTML += ledgerTrack.innerHTML;
+      }
+
+      // ── NAV SCROLL CLASS ──────────────────────────
+      var nav = document.getElementById('nav');
+      var nt = false;
+      if (nav) {
+        window.addEventListener('scroll', function () {
+          if (!nt) {
+            requestAnimationFrame(function () {
+              nav.classList.toggle('nav--onscroll', window.scrollY > 30);
+              nt = false;
+            });
+            nt = true;
+          }
+        }, { passive: true });
+      }
+
+      // ── REVEAL ────────────────────────────────────
+      var rv = document.querySelectorAll('.reveal');
+      var rvt = false;
+      function rc() {
+        var h = window.innerHeight;
+        for (var i = 0; i < rv.length; i++) {
+          if (rv[i].getBoundingClientRect().top < h - 70) rv[i].classList.add('reveal--on');
+        }
+        rvt = false;
+      }
+      rc();
+      window.addEventListener('scroll', function () {
+        if (!rvt) { requestAnimationFrame(rc); rvt = true; }
+      }, { passive: true });
+
+      // ── CUSTOM CURSOR — CAD crosshair ──
+      (function () {
+        if (prefersReducedMotion) return;
+        if (!window.matchMedia('(pointer: fine)').matches) return;
+
+        var dot = document.querySelector('.cursor');
+        var ret = document.querySelector('.cursor__reticle');
+        if (!dot || !ret) return;
+
+        var x = -100, y = -100;       // target
+        var rx = -100, ry = -100;     // trailing reticle
+        var LERP = 0.16;
+        var cursorOn = false;
+        var activeSel = 'a, button, [role="button"], input, select, textarea, label, summary';
+
+        function frame() {
+          rx += (x - rx) * LERP;
+          ry += (y - ry) * LERP;
+          dot.style.translate = x + 'px ' + y + 'px';
+          ret.style.translate = rx + 'px ' + ry + 'px';
+          requestAnimationFrame(frame);
+        }
+        frame();
+
+        document.addEventListener('mousemove', function (e) {
+          x = e.clientX;
+          y = e.clientY;
+          if (!cursorOn) { cursorOn = true; document.body.classList.add('cursor--on'); rx = x; ry = y; }
+        });
+
+        document.addEventListener('mouseover', function (e) {
+          var hit = e.target.closest ? e.target.closest(activeSel) : null;
+          document.body.classList.toggle('cursor--active', !!hit);
+        });
+
+        document.addEventListener('mouseleave', function () {
+          cursorOn = false;
+          document.body.classList.remove('cursor--on');
+          x = -100; y = -100; rx = -100; ry = -100;
+        });
+      })();
+
+      // ── SMOOTH SCROLL ─────────────────────────────
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          var href = this.getAttribute('href');
+          if (!href || href === '#') { e.preventDefault(); return; }
+          if (this.hasAttribute('data-placeholder')) { e.preventDefault(); return; }
+          var target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // ── OUTLINE SIDEBAR: smooth scroll + active ──
+      (function () {
+        var sidebar = document.querySelector('.post-sidebar');
+        if (!sidebar) return;
+
+        var links = Array.from(sidebar.querySelectorAll('a[href^="#"]'));
+        var headings = Array.from(document.querySelectorAll('.prose h2[id], .prose h3[id], .prose h4[id]'));
+
+        links.forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = document.querySelector(link.getAttribute('href'));
+            if (!target) return;
+            target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+            history.pushState(null, null, link.getAttribute('href'));
+          });
+        });
+
+        if (headings.length === 0) return;
+
+        function setActive() {
+          var scrollPos = window.scrollY + 120;
+          var current = headings[0].id;
+
+          for (var i = headings.length - 1; i >= 0; i--) {
+            if (headings[i].offsetTop <= scrollPos) {
+              current = headings[i].id;
+              break;
+            }
+          }
+
+          links.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+          });
+        }
+
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+          if (!ticking) {
+            window.requestAnimationFrame(function () {
+              setActive();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+
+        setActive();
+      })();
+
+      // ── CODE BLOCKS: copy + fullscreen ──
+      (function () {
+        function wrapCodeBlocks() {
+          var pres = document.querySelectorAll('.prose pre');
+
+          pres.forEach(function (pre) {
+            if (pre.parentElement && pre.parentElement.classList.contains('code-block')) return;
+
+            var wrapper = document.createElement('div');
+            wrapper.className = 'code-block';
+
+            var toolbar = document.createElement('div');
+            toolbar.className = 'code-toolbar';
+            toolbar.innerHTML = '<button type="button" class="code-copy" aria-label="复制代码">Copy</button><button type="button" class="code-fullscreen" aria-label="全屏查看">Full</button>';
+
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(toolbar);
+            wrapper.appendChild(pre);
+
+            var copyBtn = toolbar.querySelector('.code-copy');
+            var fullscreenBtn = toolbar.querySelector('.code-fullscreen');
+
+            copyBtn.addEventListener('click', function () {
+              var code = pre.querySelector('code');
+              var text = code ? code.textContent : pre.textContent;
+              navigator.clipboard.writeText(text).then(function () {
+                var original = copyBtn.textContent;
+                copyBtn.textContent = 'OK';
+                setTimeout(function () {
+                  copyBtn.textContent = original;
+                }, 1500);
+              }).catch(function () {
+                copyBtn.textContent = 'Err';
+                setTimeout(function () {
+                  copyBtn.textContent = 'Copy';
+                }, 1500);
+              });
+            });
+
+            fullscreenBtn.addEventListener('click', function () {
+              if (wrapper.classList.contains('fullscreen')) {
+                wrapper.classList.remove('fullscreen');
+                fullscreenBtn.textContent = 'Full';
+                document.body.style.overflow = '';
+              } else {
+                wrapper.classList.add('fullscreen');
+                fullscreenBtn.textContent = 'Exit';
+                document.body.style.overflow = 'hidden';
+              }
+            });
+          });
+        }
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            var fullscreenBlock = document.querySelector('.code-block.fullscreen');
+            if (fullscreenBlock) {
+              fullscreenBlock.classList.remove('fullscreen');
+              var btn = fullscreenBlock.querySelector('.code-fullscreen');
+              if (btn) btn.textContent = 'Full';
+              document.body.style.overflow = '';
+            }
+          }
+        });
+
+        wrapCodeBlocks();
+      })();
+    })();
+  </script>
+</body>
+
+</html>

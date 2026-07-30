@@ -1,0 +1,18 @@
+_site/
+node_modules/
+.cache/
+*.log
+.DS_Store
+.env
+
+# 原始字体源文件
+# 已保留 .ttf / .woff2 字体源文件提交到 Git，
+# 这样 Cloudflare Pages 等构建环境可以直接获取源字体进行子集打包。
+fonts-source/*
+!fonts-source/.gitkeep
+!fonts-source/README.md
+!fonts-source/*.ttf
+!fonts-source/*.woff2
+
+# 构建生成的子集字体
+src/fonts/*
