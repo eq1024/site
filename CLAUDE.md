@@ -1,19 +1,19 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
 ## Project Overview
 
-A minimal personal homepage and blog built with Eleventy (11ty). The site uses Markdown for content, Nunjucks for layouts, and hand-written CSS. It is designed around a newspaper/editorial aesthetic with a focus on Chinese typography.
+A personal homepage and blog built with Eleventy (11ty). V2.0 "Field Manual" redesign — technical schematic aesthetics inspired by engineering drawings. Cold gunmetal grey + industrial safety orange palette, hard edges, zero rounding. The site uses Markdown for content, Nunjucks for layouts, and hand-written CSS. Designed with Chinese typography as the primary language.
 
 ## Tech Stack
 
 - **Static Site Generator**: [Eleventy (11ty)](https://www.11ty.dev/) v2.x
 - **Templates**: Nunjucks (`.njk`)
-- **Content**: Markdown (`.md`)
-- **Styling**: Hand-written CSS in a single file (`src/styles.css`)
+- **Content**: Markdown (`.md`) with `markdown-it` + `markdown-it-anchor`
+- **Styling**: Hand-written CSS in `src/styles.css` — no preprocessor, no framework
 - **Code Highlighting**: Prism.js with Solarized Light (light theme) and Tomorrow (dark theme)
-- **Fonts**: Custom subset fonts generated from source files via `scripts/build-fonts.js`
+- **Fonts**: Custom subset fonts — Anton (display), OPPO Sans (body), Maple Mono (code). Self-hosted as WOFF2.
 - **Deployment**: Cloudflare Pages
 
 ## Common Commands
@@ -38,31 +38,35 @@ npm run clean
 ## Project Structure
 
 ```
-.eleventy.js          # Eleventy configuration, filters, passthrough copies
+.eleventy.js          # Eleventy configuration, filters, collections, passthrough copies
+TODO.md               # Prioritized task/audit list
 src/
   _includes/
-    base.njk          # Base layout: <html>, <head>, header/footer, scripts
-    post.njk          # Article layout: title, meta, prose content, sidebar outline
-    page.njk          # Generic page layout (e.g. about)
-    outline.njk       # Reusable outline macro
-  _data/site.json     # Site metadata used in templates
-  blog/               # Markdown blog posts
-  blog.njk            # Blog listing page
-  index.njk           # Homepage
-  about.md            # About page
-  styles.css          # Single stylesheet for the entire site
-  scripts/overlay-scrollbar.js  # Custom overlay scrollbar for body
-  fonts/              # Generated subset fonts (do not edit, see fonts-source/)
-fonts-source/         # Original font source files (tracked in git)
-scripts/build-fonts.js # Font subsetting script
-_site/                # Build output
+    base.njk          # Root layout: <html>, <head>, nav, footer, theme toggle, Prism, custom cursor, script bundle
+    post.njk          # Article layout: title, meta, prose content, optional sticky outline sidebar
+    page.njk          # Generic page layout (used by about.md)
+  _data/site.json     # Site metadata: title, description, author, lang, nav links
+  blog/
+    blog.json         # Default front matter for posts (tags: ["posts"], layout: post.njk)
+    tags.njk          # Tag archive page with pagination
+    *.md              # 33 Markdown blog posts (4 new, 29 legacy with old- prefix)
+  blog.njk            # Blog listing page with pagination (8 per page) and tag filtering
+  index.njk           # Homepage: Hero → Ledger → Profile → Service Record → Systems → Inventory
+  about.md            # About page (uses page.njk layout)
+  styles.css          # Single stylesheet — CSS variables, prose, layout, dark mode, all components
+  scripts/
+    hero-wireframe.js # 4D hypercube wireframe on <canvas>
+  fonts/              # Generated subset fonts (do not edit manually)
+fonts-source/         # Original font source files (tracked in git for Cloudflare build)
+scripts/build-fonts.js# Font subsetting script (reads fonts-source/, scans src/ for used characters)
+_site/                # Build output (gitignored)
 ```
 
 ## Architecture Notes
 
 ### Template Inheritance
 
-Content flows through templates:
+Content flows through templates in this hierarchy:
 
 ```
 Markdown / Nunjucks page
@@ -72,57 +76,91 @@ Markdown / Nunjucks page
   base.njk
 ```
 
-- `base.njk` renders the HTML shell, site header, footer, theme toggle, Prism scripts, and custom scrollbar script.
-- `post.njk` renders the article header, `.prose` content, and conditionally renders a sticky outline sidebar if `outline: true` is set in the post front matter.
-- `page.njk` wraps content in `.page-content.container.prose`.
+- `base.njk` renders the HTML shell: `<head>` with meta tags, OG tags, favicons, PWA manifest, font preloads, theme stylesheets; `<body>` with custom cursor elements, `nav` (sticky header), `<main>` content slot, `footer`, Prism scripts, and the full inline script bundle.
+- `post.njk` renders the article header, `.prose` content, and a sticky outline sidebar when `outline: true` is set in front matter.
+- `page.njk` wraps content in `.page-content.container` — used by the about page.
+- `index.njk` is a flat page (no layout nesting beyond base) with 6 sections: Hero, Ledger marquee, Profile, Service Record, Systems, Inventory.
 
 ### Content Pipeline
 
-- Eleventy reads files from `src/` and outputs to `_site/`.
-- Markdown is processed with `markdown-it` plus `markdown-it-anchor`, which auto-generates `id` attributes for `h2/h3/h4` headings.
-- The custom `outline` filter scans rendered HTML for headings and emits a nested `<ul>` for the sidebar.
+- Eleventy reads from `src/` and outputs to `_site/`.
+- Markdown is processed with `markdown-it` plus `markdown-it-anchor`, which auto-generates `id` attributes on `h2/h3/h4` headings with a Chinese-aware slug function.
+- The `outline` Nunjucks filter scans rendered HTML for headings, builds a nested tree, and emits `<ul>` markup for the sidebar.
+- Blog posts use the `posts` tag (applied automatically by being in `src/blog/`). The `collections.posts` collection powers the blog listing and pagination.
 - Static assets are copied via `addPassthroughCopy` in `.eleventy.js`.
 
 ### Styling
 
-- All styles live in `src/styles.css`.
-- CSS variables are defined on `:root` and overridden for dark mode via `:root[data-theme="dark"]`.
-- The `.prose` class contains the bulk of typography styles for Markdown content.
-- Dark mode is toggled by a button in `base.njk` which sets `data-theme` on `<html>` and swaps the active Prism stylesheet.
+- All styles live in `src/styles.css` (~3000+ lines). No CSS preprocessor.
+- CSS custom properties on `:root` for the light theme, overridden on `[data-theme="dark"]` for dark mode.
+- Dark mode is the default (`<html data-theme="dark">`).
+- The `.prose` class handles all typography for Markdown content (headings, paragraphs, lists, code blocks, tables, blockquotes).
+- Key design tokens: `--bg` (dark: `#0b0d10`), `--surface` (dark: `#11161a`), `--text` (dark: `#cdd6db`), `--accent` (industrial orange `#ff6b35`).
 
 ### Code Highlighting
 
 - Prism.js is loaded from `node_modules/prismjs` and copied to `_site/` during build.
-- Light theme uses `prism-solarizedlight.css`; dark theme uses `prism-tomorrow.css`.
-- Code blocks are wrapped at runtime with a `.code-block` div, toolbar, copy button, and fullscreen button via the inline script in `base.njk`.
+- Light theme: `prism-solarizedlight.css`; Dark theme: `prism-tomorrow.css`.
+- Supported languages: JSX, TypeScript, TSX, Bash, JSON (plus default languages).
+- At runtime, code blocks inside `.prose` are wrapped with a `.code-block` div containing a toolbar with Copy and Fullscreen buttons (inline script in `base.njk`).
 
-### Custom Overlay Scrollbar
+### Custom Cursor
 
-- `src/scripts/overlay-scrollbar.js` hides the native body scrollbar and renders a thin overlay scrollbar on the right edge of the viewport.
-- It supports dragging the thumb to scroll and clicking the track to jump.
+- Only activates on fine-pointing devices (hides on touch/mobile).
+- A CAD-style crosshair: a small dot + trailing reticle with lerp smoothing.
+- Enlarges on interactive elements (`a`, `button`, `input`, etc.) via `.cursor--active`.
+- Respects `prefers-reduced-motion`.
+
+### Scroll Behavior
+
+- Smooth scroll for anchor links (respects `prefers-reduced-motion`).
+- Nav bar gets `.nav--onscroll` class after 30px of scroll for background transition.
+- `.reveal` elements animate in on scroll (intersection observer-style via scroll listener).
+- Blog post outline sidebar highlights the current section on scroll.
 
 ### Font Subsetting
 
-- `scripts/build-fonts.js` reads font source files from `fonts-source/`, collects all unique characters used under `src/`, and produces subset fonts into `src/fonts/`.
-- `.ttf` files are subset with `fontmin` and compressed to `.woff2` with `wawoff2`.
+- `scripts/build-fonts.js` collects all unique characters from `src/`, subsets the source fonts in `fonts-source/`, and outputs to `src/fonts/`.
+- `.ttf` source files → `fontmin` (subset) → `wawoff2` (compress to WOFF2).
 - `.woff2` source files are copied as-is.
-- The build command `npm run build` runs `build:fonts` before Eleventy.
-- `src/fonts/` is generated and should not be manually edited.
+- `npm run build:fonts` runs this; `npm run build` runs it automatically before Eleventy.
+- `src/fonts/` is generated — never edit files there directly.
 
-## Important Files to Know
+### Homepage Sections
 
-- `.eleventy.js` — Configuration, passthrough copies, custom filters (`readableDate`, `shortDate`, `excerpt`, `outline`).
-- `src/_data/site.json` — Site title, author, navigation links, language.
-- `src/_includes/base.njk` — Root layout containing theme toggle, Prism, and overlay scrollbar setup.
-- `src/_includes/post.njk` — Article layout and outline sidebar rendering.
-- `src/styles.css` — All visual styles.
-- `scripts/build-fonts.js` — Font subsetting automation.
+The homepage (`index.njk`) is a single-page layout with these sections:
+
+1. **Hero** — 4D hypercube wireframe on `<canvas>`, title "EQ1024", key specs (Vue/React/Cross-Platform/AI-Native), stats panel, action buttons
+2. **Ledger** — Infinite marquee of tech keywords (duplicated track for seamless loop)
+3. **01 Profile** — Operator file panel (designation, service years, stack, status) + bio paragraphs
+4. **02 Service Record** — Career timeline as a table (R1–R4 rows with date, role, details, tags)
+5. **03 Systems** — Project spec sheets: BMS Monorepo, ServicePioneer RN app, Self Repair platform
+6. **04 Inventory** — Skills matrix (6 categories: Frontend, Cross-Platform, Architecture, Data & State, Infra, AI Workflow) + AI-native directive callout
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `.eleventy.js` | Eleventy config, passthrough copies, custom filters (`readableDate`, `shortDate`, `excerpt`, `outline`, `selectByTag`), `tagList` collection |
+| `src/_data/site.json` | Site title, description, author, language (`zh-CN`), nav links |
+| `src/_includes/base.njk` | Root layout — the entire HTML shell with all inline scripts |
+| `src/_includes/post.njk` | Article layout and optional outline sidebar |
+| `src/styles.css` | All visual styles — CSS variables, layout, prose, components, dark mode |
+| `src/index.njk` | Homepage with all 4 major sections |
+| `src/blog.njk` | Blog listing with pagination + tag filter chips |
+| `src/blog/blog.json` | Default front matter for all posts (tags, layout) |
+| `src/blog/tags.njk` | Tag archive page — filtered posts per tag |
+| `scripts/build-fonts.js` | Font subsetting and WOFF2 compression |
+| `src/scripts/hero-wireframe.js` | 4D hypercube canvas renderer |
+| `TODO.md` | Prioritized task list from site audit |
 
 ## Development Notes
 
-- Adding a new blog post: create a new `.md` file in `src/blog/` with front matter including `title`, `date`, `description`, `tags`, and optionally `outline: true`.
-- Changing styles: edit `src/styles.css` only. There is no CSS preprocessor.
-- Changing layout: edit the Nunjucks files in `src/_includes/`.
-- Adding a new page: create a Markdown or Nunjucks file in `src/` and use the `page.njk` layout if needed.
-- Cloudflare Pages build command: `npm run build`. Output directory: `_site`.
-- Original font files live in `fonts-source/` and are tracked in git so Cloudflare Pages can generate subsets during build.
+- **Adding a blog post:** Create a `.md` file in `src/blog/` with front matter: `title`, `date`, `description`, `tags` (array), and optionally `outline: true`. The `posts` tag is applied automatically.
+- **Changing styles:** Edit `src/styles.css` only. There is no CSS preprocessor — all styles are in one file. Use the existing CSS variable system for colors.
+- **Changing layout:** Edit the Nunjucks files in `src/_includes/`.
+- **Adding a static page:** Create a `.md` or `.njk` file in `src/`, set `layout: page.njk` (or `base.njk` for full control).
+- **Site metadata:** Edit `src/_data/site.json` for title, description, nav links, etc.
+- **Fonts:** Source files go in `fonts-source/`. Run `npm run build:fonts` to regenerate subsets. The generated `src/fonts/` is tracked in git.
+- **Cloudflare Pages:** Build command is `npm run build`, output directory is `_site`.
+- **Dark mode:** Default theme is dark. Theme preference is persisted in `localStorage`. The toggle button switches `data-theme` on `<html>` and swaps the active Prism stylesheet.
