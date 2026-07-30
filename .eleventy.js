@@ -48,6 +48,14 @@ module.exports = function (eleventyConfig) {
     });
   });
 
+  // 最新 3 篇文章（用于首页，排除标签页等非文章页面）
+  eleventyConfig.addCollection("latestPosts", (collectionApi) => {
+    return collectionApi.getFilteredByTag("posts")
+      .filter(item => item.inputPath.endsWith('.md'))
+      .reverse()
+      .slice(0, 3);
+  });
+
   // 收集所有标签及文章数
   eleventyConfig.addCollection("tagList", (collectionApi) => {
     const posts = collectionApi.getFilteredByTag("posts");
@@ -81,6 +89,12 @@ module.exports = function (eleventyConfig) {
       month: "2-digit",
       day: "2-digit",
     });
+  });
+
+  // ISO 日期格式（用于 <time datetime>）
+  eleventyConfig.addFilter("isoDate", (dateObj) => {
+    const d = new Date(dateObj);
+    return d.toISOString().split("T")[0];
   });
 
   // 截取摘要

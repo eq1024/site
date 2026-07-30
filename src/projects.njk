@@ -1,23 +1,155 @@
 ---
 layout: base.njk
-title: 开源项目
+title: 项目
 ---
 
 <div class="page-content container">
   <div class="sec__inner">
+
+    <!-- ==================== DEPLOYED SYSTEMS ==================== -->
     <div class="sec__head reveal">
-      <span class="sec__no">PROJ</span>
+      <span class="sec__no">SYS</span>
+      <span class="sec__name">Deployed Systems</span>
+      <span class="sec__rule" aria-hidden="true"></span>
+    </div>
+
+    <h1 class="page-heading reveal r1">工作项目 — <em>Field Systems</em></h1>
+
+    <p class="prose reveal r1" style="margin-bottom: clamp(36px, 5vh, 56px); max-width: 640px; color: var(--t-secondary);">
+      在真实业务约束下交付的核心系统——从架构设计到上线部署，每个项目都是一份独立负责的工程档案。
+    </p>
+
+    <!-- SYS-01 : BMS -->
+    <article class="spec reveal">
+      <div class="spec__head">
+        <span class="spec__no">01</span>
+        <div class="spec__titlebox">
+          <h3 class="spec__name">BMS 跨境仓储售后系统</h3>
+          <p class="spec__role">独立架构 · Vue 3 Monorepo 重构</p>
+        </div>
+        <span class="spec__stamp">■ Deployed</span>
+      </div>
+      <div class="spec__grid">
+        <div class="spec__cell">
+          <p class="spec__cell-label">Problem</p>
+          <p class="spec__cell-text">三个独立仓库代码复制粘贴，路由权限检查被注释掉，三套 UI 库（iView 3.x + view-design 4.x + Element UI 2.x）混用，Sentry Token 明文暴露在代码里。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Solution</p>
+          <p class="spec__cell-text"><strong>pnpm Monorepo + Turborepo</strong> 重构——9 个共享包，依赖拓扑严格单向（config → utils → fetch/i18n → ui → apps）。核心是<strong>配置驱动 CRUD 引擎</strong>：后端下发 JSON Schema，前端动态渲染列表和表单；配套 <strong>FormDesigner</strong> 可视化设计器，非开发人员拖拽即可产出 Schema 上线。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Key Decisions</p>
+          <p class="spec__cell-text">单向依赖拓扑 · Singleton 库设为 peerDependencies（两份 Pinia = 两个 store 注册表） · HTTP 客户端工厂模式 + 依赖注入 · pnpm.overrides 强制统一版本</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Field Notes</p>
+          <p class="spec__cell-text">16+ 字段类型、条件显隐、远程选项全部 Schema 化。40+ 列表页零前端代码。主动发现并修复 <strong>2 个 P0 安全漏洞</strong>（Sentry Token 泄露、Axios CVE），清理 17 项技术债。SSE 全局单例连接 + 多事件订阅。</p>
+        </div>
+      </div>
+      <div class="spec__foot">
+        <span class="spec__metric"><span class="spec__metric-v">−92%</span><span class="spec__metric-k">代码文件</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">10×</span><span class="spec__metric-k">构建速度</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">P0×2</span><span class="spec__metric-k">安全修复</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">40+</span><span class="spec__metric-k">零代码页面</span></span>
+        <div class="spec__stack">
+          <span class="tag">Vue 3</span><span class="tag">Vite 7</span><span class="tag">Pinia 3</span><span class="tag">Turborepo</span><span class="tag">Element Plus</span><span class="tag">SSE</span><span class="tag">Tauri v2</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- SYS-02 : ServicePioneer -->
+    <article class="spec reveal r1">
+      <div class="spec__head">
+        <span class="spec__no">02</span>
+        <div class="spec__titlebox">
+          <h3 class="spec__name">ServicePioneer 移动端</h3>
+          <p class="spec__role">独立开发 · React Native + Expo</p>
+        </div>
+        <span class="spec__stamp">■ Deployed</span>
+      </div>
+      <div class="spec__grid">
+        <div class="spec__cell">
+          <p class="spec__cell-label">Problem</p>
+          <p class="spec__cell-text">旧版 uni-app 依赖 HBuilderX IDE，没有热更新，扫码模块绑定特定工业 PDA 品牌（Seuic 专有 API），无法跨品牌复用。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Solution</p>
+          <p class="spec__cell-text"><strong>React Native 0.83 + Expo SDK 55</strong> 从零重写，46 页面 + 22 组件。核心<strong>波次拣货</strong>用双数组驱动 + 乐观更新——跨多页操作流程浓缩到一个页面。<strong>ScanProvider</strong> 把工业 PDA 的 Broadcast 统一抽象为 Context Provider，不再绑死品牌。离线弱网环境下依然可操作。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Key Decisions</p>
+          <p class="spec__cell-text">双数组驱动波次拣货（pickingArray + cartArray） · 乐观更新保证操作流畅 · Zustand 跨平台持久化（原生 Keychain + Web localStorage 适配） · TanStack Query 管理服务端缓存</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Field Notes</p>
+          <p class="spec__cell-text">EAS Build 三环境（development/preview/production）+ EAS Update OTA 热更新。FCM 推送 + Notifee 本地通知，处理前台/后台/杀死三种状态。Android + iOS 双平台交付。</p>
+        </div>
+      </div>
+      <div class="spec__foot">
+        <span class="spec__metric"><span class="spec__metric-v">46</span><span class="spec__metric-k">页面</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">−50%</span><span class="spec__metric-k">操作步骤</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">2</span><span class="spec__metric-k">平台 iOS+Android</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">22</span><span class="spec__metric-k">组件</span></span>
+        <div class="spec__stack">
+          <span class="tag">RN 0.83</span><span class="tag">Expo 55</span><span class="tag">TypeScript</span><span class="tag">Zustand</span><span class="tag">TanStack Query</span><span class="tag">NativeWind</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- SYS-03 : Self Repair -->
+    <article class="spec reveal r2">
+      <div class="spec__head">
+        <span class="spec__no">03</span>
+        <div class="spec__titlebox">
+          <h3 class="spec__name">Self Repair 自维修平台</h3>
+          <p class="spec__role">独立前端架构 · Nuxt 3 全栈</p>
+        </div>
+        <span class="spec__stamp">■ Deployed</span>
+      </div>
+      <div class="spec__grid">
+        <div class="spec__cell">
+          <p class="spec__cell-label">Problem</p>
+          <p class="spec__cell-text">面向海外 B2C 用户，需要一个深度融合<strong>维修教程 CMS</strong>（5 层分类体系：品牌→系列→型号→类型→教程）与<strong>配件电商</strong>（Stripe 多货币支付）的平台，同时支持品牌商入驻展示官方教程和配件商店。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Solution</p>
+          <p class="spec__cell-text"><strong>Nuxt 3 SSR + Nitro</strong> 服务端路由 + PM2 集群部署（3 实例）。教程 CMS 支持拖拽排序、审核流程、Fabric.js 示意图标注；<strong>多货币购物系统</strong>接入 Stripe Checkout，5 个销售区域切换自动清空购物车避免价格货币错配。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Key Decisions</p>
+          <p class="spec__cell-text"><strong>Plan-first AI 工作流</strong>——先审查数据模型和架构边界再生成代码，人工审核后四维审查验收 · 区域切换自动清空购物车 · 三维权限指令（权限 ID × 用户类型 × 品牌名）</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Field Notes</p>
+          <p class="spec__cell-text">约 <strong>70% 代码由 AI 辅助生成</strong>——不是生成即提交，而是先让 AI 出方案，人工审核架构边界后才编码。WangEditor 富文本 + Fabric.js Canvas 维修示意图标注。图片处理链路：CloudFront 上传 → vue-cropper 裁剪 → Nitro 代理绕过 CORS。</p>
+        </div>
+      </div>
+      <div class="spec__foot">
+        <span class="spec__metric"><span class="spec__metric-v">~70%</span><span class="spec__metric-k">AI 辅助生成</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">1</span><span class="spec__metric-k">个月交付</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">5</span><span class="spec__metric-k">货币区域</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">3</span><span class="spec__metric-k">PM2 实例</span></span>
+        <div class="spec__stack">
+          <span class="tag">Nuxt 3</span><span class="tag">TypeScript</span><span class="tag">Pinia</span><span class="tag">Stripe</span><span class="tag">Fabric.js</span><span class="tag">PM2</span><span class="tag">UnoCSS</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== OPEN SOURCE ==================== -->
+    <div class="sec__head reveal" style="margin-top: clamp(64px, 9vh, 96px);">
+      <span class="sec__no">OSS</span>
       <span class="sec__name">Open Source</span>
       <span class="sec__rule" aria-hidden="true"></span>
     </div>
 
-    <h1 class="page-heading reveal r1">开源项目 — <em>Side Projects</em></h1>
+    <h2 class="sec__title reveal r1">开源项目 — <em>Side Projects</em></h2>
 
     <p class="prose reveal r1" style="margin-bottom: clamp(36px, 5vh, 56px); max-width: 640px; color: var(--t-secondary);">
-      业余时间写的工具和模板——不是为了炫技，是因为真实需求驱动，遇到不爽的地方就自己动手。
+      业余时间写的工具和模板——真实需求驱动，遇到不爽的地方就自己动手。
     </p>
 
-    <!-- PROJ-01 : WinPaste -->
+    <!-- OSS-01 : WinPaste -->
     <article class="spec reveal">
       <div class="spec__head">
         <span class="spec__no">01</span>
@@ -30,11 +162,11 @@ title: 开源项目
       <div class="spec__grid">
         <div class="spec__cell">
           <p class="spec__cell-label">Problem</p>
-          <p class="spec__cell-text">Windows 自带的 <strong>Win+V</strong> 功能简陋——搜索慢、不支持图片预览、没有隐私保护、在 Chrome/VSCode 等应用中光标定位偏移。需要一个真正好用的剪贴板增强工具。</p>
+          <p class="spec__cell-text">Windows 自带的 <strong>Win+V</strong> 功能简陋——搜索慢、不支持图片预览、没有隐私保护、在 Chrome/VSCode 等应用中光标定位偏移。</p>
         </div>
         <div class="spec__cell">
           <p class="spec__cell-label">Solution</p>
-          <p class="spec__cell-text"><strong>Tauri v2 架构</strong>——Rust 后端处理底层 Win32 钩子和剪贴板监听，React 前端渲染 Fluent Design 面板。<strong>WS_EX_NOACTIVATE</strong> 窗口样式确保弹出不抢焦点，<strong>UIAutomation 接口</strong>精准获取光标位置，<strong>SSOT 原子状态机</strong>彻底消除键盘修饰键卡死竞态。</p>
+          <p class="spec__cell-text"><strong>Tauri v2 架构</strong>——Rust 后端处理底层 Win32 钩子和剪贴板监听，React 前端渲染 Fluent Design 面板。<strong>WS_EX_NOACTIVATE</strong> 窗口样式确保弹出不抢焦点，<strong>UIAutomation 接口</strong>精准获取光标位置，<strong>SSOT 原子状态机</strong>消除键盘修饰键卡死竞态。</p>
         </div>
         <div class="spec__cell">
           <p class="spec__cell-label">Key Decisions</p>
@@ -59,7 +191,7 @@ title: 开源项目
       </div>
     </article>
 
-    <!-- PROJ-02 : TRS -->
+    <!-- OSS-02 : TRS -->
     <article class="spec reveal r1">
       <div class="spec__head">
         <span class="spec__no">02</span>
@@ -72,19 +204,19 @@ title: 开源项目
       <div class="spec__grid">
         <div class="spec__cell">
           <p class="spec__cell-label">Problem</p>
-          <p class="spec__cell-text">团队每起一个新项目都要重复搭脚手架——权限控制、国际化、HTTP 客户端封装、SSE 实时推送——每次从头写一遍，浪费时间且容易不一致。需要一个<strong>开箱即用、架构清晰</strong>的 Monorepo 模板。</p>
+          <p class="spec__cell-text">团队每起一个新项目都要重复搭脚手架——权限控制、国际化、HTTP 客户端封装、SSE 实时推送——每次从头写一遍，浪费时间且容易不一致。</p>
         </div>
         <div class="spec__cell">
           <p class="spec__cell-label">Solution</p>
-          <p class="spec__cell-text"><strong>2 个 App + 7 个共享包</strong>的 Monorepo 架构。Dev/Prod 混合构建模式——开发时 Vite alias 直连源码实现跨包热更新，生产走预构建产物确保正确性。<strong>工厂函数 + 依赖注入</strong>解耦 HTTP 客户端与具体框架，<strong>getAuthStore 回调</strong>解耦权限指令与 Pinia Store 实现。</p>
+          <p class="spec__cell-text"><strong>2 个 App + 7 个共享包</strong>的 Monorepo 架构。Dev/Prod 混合构建模式——开发时 Vite alias 直连源码实现跨包热更新，生产走预构建产物。<strong>工厂函数 + 依赖注入</strong>解耦 HTTP 客户端与具体框架。</p>
         </div>
         <div class="spec__cell">
           <p class="spec__cell-label">Key Decisions</p>
-          <p class="spec__cell-text">单向依赖拓扑（config → utils → fetch/i18n → ui → apps）· 宿主依赖 peerDependencies，内部工具 dependencies 开箱即用 · Turborepo <code>dependsOn: ["^build"]</code> 确保构建顺序 · 交互式 create-app 脚手架脚本自动生成完整项目</p>
+          <p class="spec__cell-text">单向依赖拓扑 · 宿主依赖 peerDependencies，内部工具 dependencies 开箱即用 · Turborepo <code>dependsOn: ["^build"]</code> 确保构建顺序 · 交互式 create-app 脚手架脚本</p>
         </div>
         <div class="spec__cell">
           <p class="spec__cell-label">Highlights</p>
-          <p class="spec__cell-text"><strong>v-permission 指令</strong>按钮级权限控制 · <strong>vue-i18n 集成</strong>语言包跨应用共享 · <strong>SSE 全局单例</strong>多组件共享连接 · <strong>Axios 拦截器链</strong>自动 Token 注入、浏览器指纹、401 重定向 · ESLint 10 flat config + simple-git-hooks 开箱即用。</p>
+          <p class="spec__cell-text"><strong>v-permission 指令</strong>按钮级权限控制 · <strong>vue-i18n 集成</strong>语言包跨应用共享 · <strong>SSE 全局单例</strong>多组件共享连接 · <strong>Axios 拦截器链</strong>自动 Token 注入、浏览器指纹、401 重定向 · ESLint 10 flat config。</p>
         </div>
       </div>
       <div class="spec__foot">
@@ -100,6 +232,113 @@ title: 开源项目
       </div>
     </article>
 
+    <!-- ==================== EXTENDED COVERAGE ==================== -->
+    <div class="sec__head reveal" style="margin-top: clamp(64px, 9vh, 96px);">
+      <span class="sec__no">AUX</span>
+      <span class="sec__name">Extended Coverage</span>
+      <span class="sec__rule" aria-hidden="true"></span>
+    </div>
+
+    <h2 class="sec__title reveal r1">更多项目 — <em>Capability Matrix</em></h2>
+
+    <p class="prose reveal r1" style="margin-bottom: clamp(30px, 4vh, 44px); max-width: 640px; color: var(--t-secondary);">
+      以下项目展示了跨平台、跨业务域的技术广度。虽未达到上述项目的复杂度，但每一项都是独立交付的生产环境代码。
+    </p>
+
+    <div class="coverage reveal r1">
+      {% set groups = [
+        {
+          label: 'Desktop',
+          items: [
+            {
+              name: '物联网超管平台',
+              desc: 'Electron + Vue 3 + TypeScript，独立从零构建，双端（桌面+Web）交付。含 ECharts 能耗可视化、Monaco Editor 代码编辑器集成。',
+              tags: ['Electron', 'Vue 3', 'TypeScript', 'Ant Design Vue', 'ECharts', 'Flow CD']
+            }
+          ]
+        },
+        {
+          label: 'SSR / Web',
+          items: [
+            {
+              name: '官网 Nuxt 3 SSR 重构',
+              desc: '从旧版 CMS 完全迁移到 Nuxt 3 SSR。双端请求封装、动态路由+静态生成混合策略、结构化数据 SEO 优化、CI/CD 自动部署。',
+              tags: ['Nuxt 3', 'SSR', 'TypeScript', 'SEO', 'Sass', 'Vite 4']
+            },
+            {
+              name: '深国际智慧办公系统',
+              desc: 'Vue 2 + TypeScript SaaS 系统。工位拖拽可视化（后台拖拽标记+小程序缩放选座）、RBAC 权限体系、虚拟滚动优化长列表。',
+              tags: ['Vue 2', 'TypeScript', 'Vuex', 'Element UI', 'GitLab CI', '虚拟滚动']
+            }
+          ]
+        },
+        {
+          label: 'Mini Program',
+          items: [
+            {
+              name: '智慧办公小程序',
+              desc: '原生微信小程序，集通行/访客/工位/会议/企服/停车于一体。工位可视化选座、微信支付闭环、用户权限分组、无痛登录优化。',
+              tags: ['原生小程序', 'Vant Weapp', 'crypto-js', '支付闭环']
+            },
+            {
+              name: '鸿光雅玛分销小程序',
+              desc: 'uni-app 分销小程序，打包生成 Android APP。打通小程序与 APP 关联、微信登录 unionId 适配、分销关系链建立。',
+              tags: ['uni-app', 'uview-ui', 'APP 打包', '微信支付']
+            },
+            {
+              name: '校友活动平台 · 房鲸 · 瓶改管',
+              desc: 'uni-app / 原生小程序，覆盖活动报名支付、商品房预约看房、政府需求收集等场景。含二次封装 timepicker/picker 表单化等通用能力。',
+              tags: ['uni-app', '原生小程序', 'Vue 2', 'Element UI']
+            }
+          ]
+        },
+        {
+          label: 'Backend Systems',
+          items: [
+            {
+              name: '小助手通用管理系统',
+              desc: 'Vue 2 通用后台。首次独立设计 RBAC 权限体系（动态菜单+角色+按钮级指令）、CSP 内容安全策略防 XSS、addRoute 动态路由。',
+              tags: ['Vue 2', 'Vuex', 'Element UI', 'RBAC', 'TinyMCE']
+            },
+            {
+              name: 'ServicePioneer v1 (uni-app)',
+              desc: 'uni-app 移动端旧版，190 页面 + 280+ API 端点，5 种语言国际化。独立开发蓝牙打印组件（3 种模式）、维护扫码/RFID 工业 PDA 模块。',
+              tags: ['uni-app', 'Vue 3', 'Vuex', '蓝牙打印', 'RFID', 'i18n']
+            }
+          ]
+        },
+        {
+          label: 'Infra / Tools',
+          items: [
+            {
+              name: '运维与工具开发',
+              desc: 'Docker 容器制作与私有仓库搭建、Nginx 部署配置、Linux 系统维护、NodeJS 监控脚本 + webhook 实时通知、CLI 脚手架工具编写。',
+              tags: ['Docker', 'Nginx', 'Linux', 'Node.js', 'Shell']
+            }
+          ]
+        }
+      ] %}
+
+      {% for group in groups %}
+      <div class="coverage__group">
+        <h3 class="coverage__label">{{ group.label }}</h3>
+        {% for item in group.items %}
+        <div class="coverage__row">
+          <div class="coverage__head">
+            <p class="coverage__name">{{ item.name }}</p>
+            <div class="coverage__tags">
+              {% for tag in item.tags %}
+              <span class="tag">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          <p class="coverage__desc">{{ item.desc }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+
     <!-- CTA -->
     <div class="directive reveal r2" style="margin-top: clamp(36px, 5vh, 56px);">
       <div class="directive__inner">
@@ -109,5 +348,6 @@ title: 开源项目
         </p>
       </div>
     </div>
+
   </div>
 </div>
