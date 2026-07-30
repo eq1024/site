@@ -1,14 +1,13 @@
 {
-  "title": "EQ1024 · Frontend Engineer",
-  "description": "EQ1024 — Senior Frontend Engineer. 5 years, Vue / React / Cross-platform / AI-native. An engineer who architects systems, not just builds pages.",
+  "title": "EQ1024",
+  "description": "EQ1024 — 前端工程师。5 年经验，Vue / React / 跨平台 / AI-Native。写代码，做设计，偶尔写点东西。",
   "author": "EQ1024",
   "lang": "zh-CN",
   "url": "https://your-domain.pages.dev",
   "nav": [
-    { "text": "Profile", "url": "/#profile" },
-    { "text": "Record", "url": "/#service" },
-    { "text": "Systems", "url": "/#systems" },
-    { "text": "About", "url": "/about/" },
-    { "text": "Blog", "url": "/blog/" }
+    { "text": "首页", "url": "/" },
+    { "text": "项目", "url": "/projects/" },
+    { "text": "文章", "url": "/blog/" },
+    { "text": "关于我", "url": "/about/" }
   ]
 }

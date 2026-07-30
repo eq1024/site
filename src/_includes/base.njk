@@ -34,19 +34,17 @@
   <!-- ===================== NAV ===================== -->
   <nav class="nav" id="nav" aria-label="Main navigation">
     <div class="container">
-      <a href="/#top" class="nav__brand">
+      <a href="/" class="nav__brand">
         <span class="nav__brand-mark">E</span>
         EQ1024
-        <span class="nav__brand-ver">V2.0 // FIELD MANUAL</span>
+        <span class="nav__brand-ver">V2.0 · 现场手册</span>
       </a>
       <ul class="nav__links">
-        <li><a href="#profile"><i>01</i>Profile</a></li>
-        <li><a href="#service"><i>02</i>Record</a></li>
-        <li><a href="#systems"><i>03</i>Systems</a></li>
-        <li><a href="#inventory"><i>04</i>Inventory</a></li>
-        <li><a href="/blog/"><i>05</i>Blog</a></li>
-        <li><a href="/about/"><i>06</i>About</a></li>
-        <li><button class="nav__theme-btn" id="theme-toggle" type="button">Light</button></li>
+        <li><a href="/">首页</a></li>
+        <li><a href="/projects/">项目</a></li>
+        <li><a href="/blog/">文章</a></li>
+        <li><a href="/about/">关于我</a></li>
+        <li><button class="nav__theme-btn" id="theme-toggle" type="button">浅色</button></li>
       </ul>
     </div>
   </nav>
@@ -67,11 +65,10 @@
       <p class="footer__motto reveal r1">写代码，做设计，偶尔写点东西。</p>
 
       <nav class="footer__nav reveal r2" aria-label="站点导航">
-        <a href="/#top">Home</a>
-        <a href="/#profile">Profile</a>
-        <a href="/#systems">Projects</a>
-        <a href="/blog/">Blog</a>
-        <a href="/about/">About</a>
+        <a href="/">首页</a>
+        <a href="/projects/">项目</a>
+        <a href="/blog/">文章</a>
+        <a href="/about/">关于我</a>
         <a href="https://github.com/eq1024" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href="mailto:xhxjxk14@foxmail.com">Email</a>
       </nav>
@@ -84,9 +81,9 @@
       </div>
 
       <div class="footer__signoff reveal r3">
-        <span>EQ1024 · FIELD MANUAL V2.0</span>
-        <span>Drawn by hand + Claude Code</span>
-        <span><a href="#top">↑ Back to Sheet 01</a></span>
+        <span>EQ1024 · 现场手册 V2.0</span>
+        <span>手工绘制 + Claude Code</span>
+        <span><a href="#top">↑ 返回顶部</a></span>
         <span>© 2026</span>
       </div>
     </div>
@@ -115,7 +112,7 @@
 
       function setThemeLabel() {
         if (!toggle) return;
-        toggle.textContent = html.getAttribute('data-theme') === 'light' ? 'Dark' : 'Light';
+        toggle.textContent = html.getAttribute('data-theme') === 'light' ? '深色' : '浅色';
       }
       setThemeLabel();
 

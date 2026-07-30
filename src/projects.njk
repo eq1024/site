@@ -1,0 +1,113 @@
+---
+layout: base.njk
+title: 开源项目
+---
+
+<div class="page-content container">
+  <div class="sec__inner">
+    <div class="sec__head reveal">
+      <span class="sec__no">PROJ</span>
+      <span class="sec__name">Open Source</span>
+      <span class="sec__rule" aria-hidden="true"></span>
+    </div>
+
+    <h1 class="page-heading reveal r1">开源项目 — <em>Side Projects</em></h1>
+
+    <p class="prose reveal r1" style="margin-bottom: clamp(36px, 5vh, 56px); max-width: 640px; color: var(--t-secondary);">
+      业余时间写的工具和模板——不是为了炫技，是因为真实需求驱动，遇到不爽的地方就自己动手。
+    </p>
+
+    <!-- PROJ-01 : WinPaste -->
+    <article class="spec reveal">
+      <div class="spec__head">
+        <span class="spec__no">01</span>
+        <div class="spec__titlebox">
+          <h3 class="spec__name">WinPaste</h3>
+          <p class="spec__role">Rust + React · Tauri v2 桌面应用</p>
+        </div>
+        <span class="spec__stamp">■ v1.6.5 Released</span>
+      </div>
+      <div class="spec__grid">
+        <div class="spec__cell">
+          <p class="spec__cell-label">Problem</p>
+          <p class="spec__cell-text">Windows 自带的 <strong>Win+V</strong> 功能简陋——搜索慢、不支持图片预览、没有隐私保护、在 Chrome/VSCode 等应用中光标定位偏移。需要一个真正好用的剪贴板增强工具。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Solution</p>
+          <p class="spec__cell-text"><strong>Tauri v2 架构</strong>——Rust 后端处理底层 Win32 钩子和剪贴板监听，React 前端渲染 Fluent Design 面板。<strong>WS_EX_NOACTIVATE</strong> 窗口样式确保弹出不抢焦点，<strong>UIAutomation 接口</strong>精准获取光标位置，<strong>SSOT 原子状态机</strong>彻底消除键盘修饰键卡死竞态。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Key Decisions</p>
+          <p class="spec__cell-text">非阻塞钩子——回调即发即忘，繁重任务移交 Tokio Worker · Windows DPAPI + AES 加密敏感数据 · SQLite WAL 模式持久化 · 零遥测、零注册、零冗余</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Highlights</p>
+          <p class="spec__cell-text">支持纯文本 / 富文本 HTML / 图片 / 文件路径 / GIF 多格式捕获；<strong>隐私脱敏</strong>自动检测手机号、身份证、邮箱和密码；<strong>顺序粘贴模式</strong>多条内容入队一键逐条粘贴；<strong>全键盘操作</strong>方向键导航 + Ctrl+Shift+0-9 快速粘贴；深色/浅色/跟随系统 + Mica 毛玻璃主题。</p>
+        </div>
+      </div>
+      <div class="spec__foot">
+        <span class="spec__metric"><span class="spec__metric-v">274</span><span class="spec__metric-k">GitHub Stars</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">v1.6.5</span><span class="spec__metric-k">最新版本</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">3</span><span class="spec__metric-k">语言 i18n</span></span>
+        <div class="spec__stack">
+          <span class="tag">Rust</span><span class="tag">React 19</span><span class="tag">Tauri v2</span><span class="tag">TypeScript</span><span class="tag">Zustand</span><span class="tag">Tailwind CSS</span><span class="tag">SQLite</span><span class="tag">Win32 API</span>
+        </div>
+      </div>
+      <div class="spec__foot" style="border-top: none; padding-top: 0; justify-content: flex-start; gap: 12px;">
+        <a href="https://github.com/eq1024/WinPaste" target="_blank" rel="noopener noreferrer" class="btn btn--primary">GitHub ↗</a>
+        <a href="https://eq1024.github.io/WinPaste/" target="_blank" rel="noopener noreferrer" class="btn">官网 ↗</a>
+      </div>
+    </article>
+
+    <!-- PROJ-02 : TRS -->
+    <article class="spec reveal r1">
+      <div class="spec__head">
+        <span class="spec__no">02</span>
+        <div class="spec__titlebox">
+          <h3 class="spec__name">TRS · turborepo-starter</h3>
+          <p class="spec__role">Vue 3 Monorepo 启动模板 · pnpm + Turborepo</p>
+        </div>
+        <span class="spec__stamp">■ Open Source</span>
+      </div>
+      <div class="spec__grid">
+        <div class="spec__cell">
+          <p class="spec__cell-label">Problem</p>
+          <p class="spec__cell-text">团队每起一个新项目都要重复搭脚手架——权限控制、国际化、HTTP 客户端封装、SSE 实时推送——每次从头写一遍，浪费时间且容易不一致。需要一个<strong>开箱即用、架构清晰</strong>的 Monorepo 模板。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Solution</p>
+          <p class="spec__cell-text"><strong>2 个 App + 7 个共享包</strong>的 Monorepo 架构。Dev/Prod 混合构建模式——开发时 Vite alias 直连源码实现跨包热更新，生产走预构建产物确保正确性。<strong>工厂函数 + 依赖注入</strong>解耦 HTTP 客户端与具体框架，<strong>getAuthStore 回调</strong>解耦权限指令与 Pinia Store 实现。</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Key Decisions</p>
+          <p class="spec__cell-text">单向依赖拓扑（config → utils → fetch/i18n → ui → apps）· 宿主依赖 peerDependencies，内部工具 dependencies 开箱即用 · Turborepo <code>dependsOn: ["^build"]</code> 确保构建顺序 · 交互式 create-app 脚手架脚本自动生成完整项目</p>
+        </div>
+        <div class="spec__cell">
+          <p class="spec__cell-label">Highlights</p>
+          <p class="spec__cell-text"><strong>v-permission 指令</strong>按钮级权限控制 · <strong>vue-i18n 集成</strong>语言包跨应用共享 · <strong>SSE 全局单例</strong>多组件共享连接 · <strong>Axios 拦截器链</strong>自动 Token 注入、浏览器指纹、401 重定向 · ESLint 10 flat config + simple-git-hooks 开箱即用。</p>
+        </div>
+      </div>
+      <div class="spec__foot">
+        <span class="spec__metric"><span class="spec__metric-v">2</span><span class="spec__metric-k">示例 App</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">7</span><span class="spec__metric-k">共享包</span></span>
+        <span class="spec__metric"><span class="spec__metric-v">10×</span><span class="spec__metric-k">起项目提速</span></span>
+        <div class="spec__stack">
+          <span class="tag">Vue 3.5</span><span class="tag">Vite 8</span><span class="tag">TypeScript 6</span><span class="tag">Pinia 3</span><span class="tag">Turborepo</span><span class="tag">vue-i18n 11</span><span class="tag">ESLint 10</span><span class="tag">pnpm</span>
+        </div>
+      </div>
+      <div class="spec__foot" style="border-top: none; padding-top: 0; justify-content: flex-start; gap: 12px;">
+        <a href="https://github.com/eq1024/turborepo-starter" target="_blank" rel="noopener noreferrer" class="btn btn--primary">GitHub ↗</a>
+      </div>
+    </article>
+
+    <!-- CTA -->
+    <div class="directive reveal r2" style="margin-top: clamp(36px, 5vh, 56px);">
+      <div class="directive__inner">
+        <p class="directive__label">More on GitHub</p>
+        <p class="directive__text">
+          更多项目和小工具在 <a href="https://github.com/eq1024" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline;">github.com/eq1024</a>——包括个人前端 Skills 库、技术文档沉淀等。
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
