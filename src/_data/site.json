@@ -8,6 +8,7 @@
     { "text": "Profile", "url": "/#profile" },
     { "text": "Record", "url": "/#service" },
     { "text": "Systems", "url": "/#systems" },
+    { "text": "About", "url": "/about/" },
     { "text": "Blog", "url": "/blog/" }
   ]
 }
